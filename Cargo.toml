@@ -1,0 +1,12 @@
+[package]
+name = "sword_mache"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+crossbeam = "0.8.4"
+crossterm = "0.29.0"
+rand = "0.8.5"
+
+rusty_audio = "1.4.1"
