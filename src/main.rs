@@ -94,7 +94,7 @@ fn main() {
             }
         }
 
-      
+
         if world
             .monsters
             .iter()
