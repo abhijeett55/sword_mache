@@ -29,10 +29,10 @@ fn main() {
     let (render_tx, render_rx) = bounded::<World>(0);
     let (main_tx, main_rx) = bounded::<World>(0);
 
-    // Render Thread
+
     let render_thread = { thread::spawn(move || render_loop(render_rx, main_tx)) };
 
-    // Game Loop
+
     let mut stdout = io::stdout();
     terminal::enable_raw_mode().unwrap();
     stdout.execute(EnterAlternateScreen).unwrap();
@@ -44,7 +44,7 @@ fn main() {
         last_instant = Instant::now();
         let player = &mut world.player;
 
-        // Player moves?
+
         let mut player_moved = false;
         while event::poll(Duration::default()).unwrap() {
             let an_event = event::read().unwrap();
@@ -58,19 +58,18 @@ fn main() {
             }
         }
 
-        // Update monster timers
         for monster in world.monsters.iter_mut() {
             monster.move_timer.update(delta);
         }
 
-        // Monsters move?
+
         if !player_moved {
             for monster in world.monsters.iter_mut() {
                 monster.try_travel(player.coord, &mut world.dirty_coords);
             }
         }
 
-        // Did a monster die?
+
         let num_monsters = world.monsters.len();
         world
             .monsters
@@ -81,7 +80,7 @@ fn main() {
             audio.play("monster_dies");
         }
 
-        // Spawn a new monster!
+
         spawn_timer.update(delta);
         if spawn_timer.ready {
             spawn_timer = Timer::from_millis(Uniform::new(1000, 5000).sample(&mut rng));
