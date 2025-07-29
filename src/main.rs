@@ -94,30 +94,29 @@ fn main() {
             }
         }
 
-        // Did the player die?
+      
         if world
             .monsters
             .iter()
             .any(|monster| monster.coord == player.coord)
         {
             audio.play("player_dies");
-            audio.wait(); // Wait until the sound finishes, so we can hear it before quitting.
+            audio.wait();
             break 'gameloop;
         }
 
-        // Give the whole world to the renderer
         render_tx.send(world).unwrap();
-        // Get the whole world back
+
         world = main_rx.recv().unwrap();
-        // Don't exceed ~60/fps
+
         if let Some(t) = Duration::from_secs_f64(1. / 60.).checked_sub(last_instant.elapsed()) {
             thread::sleep(t);
         }
     }
 
-    // Close the render_tx channel, which will trigger the render thread to exit
+
     drop(render_tx);
-    // Wait for the render thread to actually exit
+
     render_thread.join().unwrap();
 
     stdout.execute(LeaveAlternateScreen).unwrap();
